@@ -37,5 +37,12 @@ uint32_t read_word(struct CPU *cpu, uint32_t addr){
 }
 
 void write_byte(struct CPU *cpu, uint32_t addr, uint8_t data){
-    cpu->mem[addr] = data;
+    uint32_t index = addr - BASE;
+
+    if(index >= 0 && index < MEM_SIZE){
+        cpu->mem[index] = data;
+    }
+    
+    printf("\n HALTING - unable to write to address, outside capacity");
+    return 0;
 }

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #define BASE 0x80000000
 #define MEM_SIZE (4 * 1024 * 1024)  /* 4MB of memory */
