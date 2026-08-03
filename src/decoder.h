@@ -23,6 +23,6 @@ struct INST{
     enum Type type;
 };
 
-void decoder(uint32_t inst, struct INST *current_instruction);
+void decode(uint32_t inst, struct INST *current_instruction);
 
 #endif
