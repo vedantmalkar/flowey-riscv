@@ -8,6 +8,10 @@ void increment_pc(struct CPU *cpu){
     cpu->pc+= 4;    /* next instruction */
 }
 
+uint32_t get_reg(struct CPU *cpu, uint32_t num){
+    return cpu->regs[num];
+}
+
 void cpu_init(struct CPU *cpu){
     cpu->pc = BASE;
 
@@ -44,5 +48,10 @@ void write_byte(struct CPU *cpu, uint32_t addr, uint8_t data){
     }
     
     printf("\n HALTING - unable to write to address, outside capacity");
-    return 0;
+}
+
+void write_reg(struct CPU *cpu, uint32_t val, uint32_t reg){
+    if(reg != 0){
+        cpu->regs[reg] = val;
+    }
 }

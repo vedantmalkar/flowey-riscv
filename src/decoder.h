@@ -24,5 +24,6 @@ struct INST{
 };
 
 void decode(uint32_t inst, struct INST *current_instruction);
+void ill_inst(void);
 
 #endif
