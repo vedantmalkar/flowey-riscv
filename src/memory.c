@@ -50,6 +50,19 @@ void write_byte(struct CPU *cpu, uint32_t addr, uint8_t data){
     printf("\n HALTING - unable to write to address, outside capacity");
 }
 
+void write_word(struct CPU *cpu, uint32_t addr, uint32_t inst){
+    uint8_t byte_0 = (inst & 0xFF);
+    uint8_t byte_1 = (inst >> 8) & 0xFF;
+    uint8_t byte_2 = (inst >> 16) & 0xFF; 
+    uint8_t byte_3 = (inst >> 24) & 0xFF;
+
+    uint32_t index = addr - BASE;
+    cpu->mem[index] = byte_0;
+    cpu->mem[index + 1] = byte_1;
+    cpu->mem[index + 2] = byte_2;
+    cpu->mem[index + 3] = byte_3;
+}
+
 void write_reg(struct CPU *cpu, uint32_t val, uint32_t reg){
     if(reg != 0){
         cpu->regs[reg] = val;
