@@ -22,6 +22,7 @@ void cpu_init(struct CPU *cpu);
 uint8_t read_byte(struct CPU *cpu, uint32_t addr);
 uint32_t read_word(struct CPU *cpu, uint32_t addr);
 void write_word(struct CPU *cpu, uint32_t addr, uint32_t inst);
+void write_byte(struct CPU *cpu, uint32_t addr, uint8_t data);
 void write_reg(struct CPU *cpu, uint32_t val, uint32_t reg);
 
 #endif

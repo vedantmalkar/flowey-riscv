@@ -95,8 +95,7 @@ void execute(struct CPU *cpu, uint32_t inst){
         break;
 
     case I_Type:
-        switch (c_instruction.funct3)
-        {
+        switch (c_instruction.funct3){
         case 0x0:
             uint32_t addi = get_reg(cpu, c_instruction.rs1) + c_instruction.imm;
             write_reg(cpu, addi, c_instruction.rd);
@@ -153,6 +152,18 @@ void execute(struct CPU *cpu, uint32_t inst){
             break;
         }
         break;
+
+    case S_Type:
+        switch (c_instruction.funct3){
+        case 0x0:
+            uint32_t addr = (get_reg(cpu, c_instruction.rs1) + c_instruction.imm);
+            uint8_t data = (get_reg(cpu, c_instruction.rs2) & (0x7F));
+            write_byte(cpu, addr, data);
+            break;
+        
+        default:
+            break;
+        }
     
     default:
         ill_inst();
