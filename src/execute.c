@@ -7,8 +7,8 @@ void execute(struct CPU *cpu, uint32_t inst){
     struct INST c_instruction;
     decode(inst, &c_instruction);
 
-    switch (c_instruction.type){
-    case R_Type:
+    switch (c_instruction.opcode){
+    case 0x33:
         switch (c_instruction.funct3){
         case 0x0:
             if(c_instruction.funct7 == 0x0){
@@ -94,7 +94,7 @@ void execute(struct CPU *cpu, uint32_t inst){
         }
         break;
 
-    case I_Type:
+    case 0x13:
         switch (c_instruction.funct3){
         case 0x0:
             uint32_t addi = get_reg(cpu, c_instruction.rs1) + c_instruction.imm;
@@ -152,19 +152,81 @@ void execute(struct CPU *cpu, uint32_t inst){
             break;
         }
         break;
-
-    case S_Type:
+    
+    case 0x03:
         switch (c_instruction.funct3){
-        case 0x0:
+        case 0x0: {
             uint32_t addr = (get_reg(cpu, c_instruction.rs1) + c_instruction.imm);
-            uint8_t data = (get_reg(cpu, c_instruction.rs2) & (0x7F));
+            int8_t data = read_byte(cpu, addr);
+            write_reg(cpu, (int32_t)data, c_instruction.rd);
+            break;
+        }
+
+        case 0x1: {
+            uint32_t addr = (get_reg(cpu, c_instruction.rs1) + c_instruction.imm);
+            int16_t data = read_half(cpu, addr);
+            write_reg(cpu, (int32_t)data, c_instruction.rd);
+            break;
+        }
+
+        case 0x2: {
+            uint32_t addr = (get_reg(cpu, c_instruction.rs1) + c_instruction.imm);
+            uint32_t data = read_word(cpu, addr);
+            write_reg(cpu, data, c_instruction.rd);
+            break;
+        }
+
+        case 0x4: {
+            uint32_t addr = (get_reg(cpu, c_instruction.rs1) + c_instruction.imm);
+            uint32_t data = read_byte(cpu, addr);
+            write_reg(cpu, data, c_instruction.rd);
+            break;
+        }
+
+        case 0x5: {
+            uint32_t addr = (get_reg(cpu, c_instruction.rs1) + c_instruction.imm);
+            uint16_t data = read_half(cpu, addr);
+            write_reg(cpu, data, c_instruction.rd);
+            break;
+        }
+
+        default:
+            ill_inst();
+            break;
+        }
+        
+        break;
+
+    case 0x23:
+        switch (c_instruction.funct3){
+        case 0x0: {
+            uint32_t addr = (get_reg(cpu, c_instruction.rs1) + c_instruction.imm);
+            uint8_t data = (get_reg(cpu, c_instruction.rs2) & (0xFF));
             write_byte(cpu, addr, data);
             break;
-        
+        }
+
+        case 0x1: {
+            uint32_t addr = (get_reg(cpu, c_instruction.rs1) + c_instruction.imm);
+            uint32_t data = (get_reg(cpu, c_instruction.rs2) & 0xFFFF);
+            write_byte(cpu, addr, data & 0xFF);
+            write_byte(cpu, addr + 1, (data >> 8) & 0xFF);
+            break;
+
+        }
+
+        case 0x2: {
+            uint32_t addr = (get_reg(cpu, c_instruction.rs1) + c_instruction.imm);
+            uint32_t data = (get_reg(cpu, c_instruction.rs2));
+            write_word(cpu, addr, data);
+            break;
+        }
+
         default:
             break;
         }
     
+        break;
     default:
         ill_inst();
         break;

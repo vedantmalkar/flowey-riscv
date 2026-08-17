@@ -57,7 +57,7 @@ void decode(uint32_t inst, struct INST *current_instruction){
         current_instruction->rs2 = get_rs2(inst);
         current_instruction->funct7 = get_fun7(inst);
         current_instruction->type = R_Type;
-    } else if (current_instruction->opcode == 0x13){     /* I-Type */
+    } else if (current_instruction->opcode == 0x13 || current_instruction->opcode == 0x03){     /* I-Type */
         current_instruction->rd = get_rd(inst);
         current_instruction->funct3 = get_fun3(inst);
         current_instruction->rs1 = get_rs1(inst);
