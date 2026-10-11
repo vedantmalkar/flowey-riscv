@@ -12,7 +12,6 @@ void run_cpu(struct CPU *cpu){
         }
 
         execute(cpu, instruction);
-        increment_pc(cpu);        
     }
 
 }

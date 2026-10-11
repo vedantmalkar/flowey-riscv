@@ -4,6 +4,8 @@
 
 
 void execute(struct CPU *cpu, uint32_t inst){
+    uint32_t next_pc = cpu->pc + 4;
+
     struct INST c_instruction;
     decode(inst, &c_instruction);
 
@@ -227,8 +229,52 @@ void execute(struct CPU *cpu, uint32_t inst){
         }
     
         break;
+    case 0x63: {
+        uint32_t rs1 = get_reg(cpu, c_instruction.rs1);
+        uint32_t rs2 = get_reg(cpu, c_instruction.rs2);
+        uint8_t taken = 0;
+
+        switch (c_instruction.funct3){
+        case 0x0:
+            taken = (rs1 == rs2);
+            break;
+
+        case 0x1:
+            taken = (rs1 != rs2);
+            break;
+
+        case 0x4:
+            taken = ((int32_t)rs1 < (int32_t)rs2);
+            break;
+
+        case 0x5:
+            taken = ((int32_t)rs1 >= (int32_t)rs2);
+            break;
+
+        case 0x6:
+            taken = (rs1 < rs2);
+            break;
+
+        case 0x7:
+            taken = (rs1 >= rs2);
+            break;
+
+        default:
+            ill_inst();
+            break;
+        }
+
+        if(taken){
+            next_pc = cpu->pc + c_instruction.imm;
+        }
+
+        break;
+    }
+
     default:
         ill_inst();
         break;
     }
+
+    cpu->pc = next_pc;
 }
