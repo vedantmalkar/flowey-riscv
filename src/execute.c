@@ -271,6 +271,11 @@ void execute(struct CPU *cpu, uint32_t inst){
         break;
     }
 
+    case 0x6F:
+        write_reg(cpu, cpu->pc + 4, c_instruction.rd);
+        next_pc = cpu->pc + c_instruction.imm;
+        break;
+
     default:
         ill_inst();
         break;

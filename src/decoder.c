@@ -56,6 +56,20 @@ int32_t get_imm_B(uint32_t inst){
     return imm;
 }
 
+int32_t get_imm_J(uint32_t inst){
+    uint16_t imm_low = (inst >> 21) & 0x3FF;
+    uint8_t imm_high = (inst >> 12) & 0xFF;
+    uint8_t imm_11 = (inst >> 20) & 0x1;
+    uint8_t imm_sign = (inst >> 31) & 0x1;
+    int32_t imm = (imm_sign << 20) | (imm_high << 12) | (imm_11 << 11) | (imm_low << 1);
+
+    if(imm & (1 << 20)){        /* check the sign bit */
+        imm |= 0xFFE00000;      /* fills the rest of the bits with 1 */
+    }
+
+    return imm;
+}
+
 void ill_inst(void){
     printf("illegal instruction\n");
     mcause = 2;
@@ -89,6 +103,10 @@ void decode(uint32_t inst, struct INST *current_instruction){
         current_instruction->rs2 = get_rs2(inst);
         current_instruction->imm = get_imm_B(inst);
         current_instruction->type = B_Type;
+    } else if (current_instruction->opcode == 0x6F){    /* J-Type */
+        current_instruction->rd = get_rd(inst);
+        current_instruction->imm = get_imm_J(inst);
+        current_instruction->type = J_Type;
     } else{
         ill_inst();
     }    
